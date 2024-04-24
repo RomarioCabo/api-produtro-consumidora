@@ -7,7 +7,7 @@ from pika.exceptions import AMQPConnectionError
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-class VendaListener:
+class SaleListener:
     def __init__(self):
         self.rabbit_config = RabbitMQConfig()
 
@@ -18,15 +18,14 @@ class VendaListener:
         channel.basic_ack(delivery_tag=method.delivery_tag)
 
     def start_consuming(self):
-        connection, channel = None, None
         while True:
             try:
-                connection, channel = self.rabbit_config.create_connection()
-                channel.basic_qos(prefetch_count=1)
-                channel.basic_consume(queue=self.rabbit_config.queue_name, on_message_callback=self.processar_venda)
+                with self.rabbit_config.create_connection() as channel:
+                    channel.basic_qos(prefetch_count=1)
+                    channel.basic_consume(queue=self.rabbit_config.queue_name, on_message_callback=self.processar_venda)
 
-                logging.info('Iniciando o consumo de mensagens.')
-                channel.start_consuming()
+                    logging.info('Iniciando o consumo de mensagens.')
+                    channel.start_consuming()
             except AMQPConnectionError as e:
                 logging.error(f"Falha ao conectar com o servidor RabbitMQ: {e}")
                 logging.info("Tentando reconectar em 5 segundos...")
@@ -34,7 +33,3 @@ class VendaListener:
             except Exception as e:
                 logging.error(f"Erro inesperado: {e}")
                 break
-            finally:
-                if connection:
-                    connection.close()
-                    logging.info("Conexão com RabbitMQ fechada.")

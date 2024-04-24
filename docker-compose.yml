@@ -4,7 +4,8 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.9-management-alpine
-    hostname: my-rabbitmq
+    container_name: 'rabbitmq_local'
+    hostname: localhost
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -13,6 +14,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: "/virtual_host_local"
 
 networks:
   enqueuer-service:

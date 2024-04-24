@@ -1,12 +1,12 @@
 from application import create_app
 from threading import Thread
-from domain.process_sale.sale_listener import VendaListener
+from domain.process_sale.sale_listener import SaleListener
 
 app = create_app()
 
 
 def start_rabbitmq_listener():
-    listener = VendaListener()
+    listener = SaleListener()
     listener.start_consuming()
 
 

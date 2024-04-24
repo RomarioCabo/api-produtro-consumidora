@@ -2,17 +2,9 @@ import pika
 
 
 class RabbitMQConfig:
-    def __init__(
-            self,
-            queue_name="autorizar-venda-queue",
-            exchange_name="autorizar-venda-queue-exchange",
-            routing_key="autorizar-venda-queue-routing-json-key",
-            host="localhost",
-            port=5672,
-            username="hub-fiscal",
-            password="hub-fiscal",
-            virtual_host="hub-fiscal"
-    ):
+    def __init__(self, queue_name="autorizar-venda-queue", exchange_name="autorizar-venda-queue-exchange",
+                 routing_key="autorizar-venda-queue-routing-json-key", host="localhost", port=5672, username="guest",
+                 password="guest", virtual_host="/"):
         self.queue_name = queue_name
         self.exchange_name = exchange_name
         self.routing_key = routing_key

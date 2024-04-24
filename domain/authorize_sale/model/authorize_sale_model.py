@@ -15,12 +15,11 @@ class AuthorizeSaleModel:
             'loja': fields.String(required=True, min_length=4, max_length=4, description='Código da loja',
                                   example='0001'),
             'pdv': fields.Integer(required=True, min_value=1, description='Número do ponto de venda', example=501),
-            'ordemPedido': fields.Nested(ClientModel.get_model(api), required=True,
-                                         description='Detalhes da ordem de pedido'),
-            'cliente': fields.Nested(ItemModel.get_model(api), required=True, description='Detalhes do cliente'),
+            'ordemPedido': fields.Nested(OrderModel.get_model(api), required=True),
+            'cliente': fields.Nested(ClientModel.get_model(api), required=True),
             'totalItens': fields.Integer(required=True, min_value=1, description='Total de itens na venda',
                                          example=38744),
             'quantidadeItens': fields.Integer(required=True, min_value=1, description='Quantidade de itens distintos',
                                               example=6),
-            'itens': fields.List(fields.Nested(OrderModel.get_model(api)), description='Lista de itens da venda')
+            'itens': fields.List(fields.Nested(ItemModel.get_model(api)), description='Lista de itens da venda')
         })

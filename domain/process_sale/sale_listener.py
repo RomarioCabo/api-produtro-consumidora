@@ -1,5 +1,7 @@
 import logging
 import time
+
+from domain.sefaz.sefaz_service import SefazService
 from infrastructure.config.rabbit_mq_config import RabbitMQConfig
 from pika.exceptions import AMQPConnectionError
 
@@ -10,10 +12,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 class VendaListener:
     def __init__(self):
         self.rabbit_config = RabbitMQConfig()
+        self.sefaz_service = SefazService()
 
     def processar_venda(self, channel, method, properties, body):
         logging.info(f"Recebida mensagem para processamento: {body}")
-        # Aqui você pode adicionar lógica para processar a venda.
+        produtos = self.sefaz_service.gerar_produto(body)
+        logging.info(f"PRODUTOS: {produtos}")
 
         channel.basic_ack(delivery_tag=method.delivery_tag)
 

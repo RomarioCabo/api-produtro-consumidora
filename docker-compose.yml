@@ -14,6 +14,16 @@ services:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
 
+  redis:
+    image: redis:alpine
+    hostname: my-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - enqueuer-service
+    environment:
+      REDIS_PASSWORD: "guest"
+
 networks:
   enqueuer-service:
     name: enqueuer-service

@@ -1,5 +1,8 @@
 import logging
+import json
 from datetime import datetime
+
+from pika import BasicProperties
 from pika.exceptions import AMQPConnectionError
 
 from domain.response.response import Response
@@ -22,11 +25,15 @@ class AuthorizeSaleService:
             return Response("MENSAGEM_VAZIA", datetime.now())
 
         try:
-            with self.rabbit_config.create_connection() as (channel):
-                logging.info(f"Enviando para fila {self.rabbit_config.queue_name} a mensagem: {mensagem}")
+            with self.rabbit_config.create_connection() as channel:
+                messagem_json = json.dumps(mensagem)
+                properties = BasicProperties(content_type='application/json')
+
+                logging.info(f"Enviando para fila {self.rabbit_config.queue_name} a mensagem: {messagem_json}")
                 channel.basic_publish(exchange=self.exchange,
                                       routing_key=self.routing_key,
-                                      body=str(mensagem))
+                                      body=messagem_json,
+                                      properties=properties)
             return Response("EM_PROCESSAMENTO", datetime.now())
         except AMQPConnectionError as e:
             logging.error("Failed to connect to RabbitMQ server: %s", e)

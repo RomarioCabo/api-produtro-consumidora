@@ -22,8 +22,8 @@ class SaleListener:
 
             mensagem_decodificada = json.loads(mensagem_json)
 
-            produtos = self.sefaz_service.gerar_produtos(mensagem_decodificada)
-            logging.info(f"Produtos: {produtos}")
+            authorize_response = self.sefaz_service.autorizar_venda(mensagem_decodificada)
+            logging.info(f"AUTHORIZE_RESPONSE: {authorize_response}")
 
         except json.JSONDecodeError as e:
             logging.error(f"Erro ao decodificar JSON: {e}")

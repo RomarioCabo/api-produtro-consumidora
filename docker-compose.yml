@@ -16,6 +16,24 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
       RABBITMQ_DEFAULT_VHOST: "/virtual_host_local"
 
+  sales-db-local:
+    image: postgres:11.6-alpine
+    environment:
+      POSTGRES_DB: "sales-db"
+      POSTGRES_USER: "sales_user"
+      POSTGRES_PASSWORD: "sales_password"
+    ports:
+      - "5442:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data2
+    container_name: "sales-db-local"
+    networks:
+      - enqueuer-service
+
 networks:
   enqueuer-service:
     name: enqueuer-service
+
+volumes:
+  postgres-data:
+    external: false

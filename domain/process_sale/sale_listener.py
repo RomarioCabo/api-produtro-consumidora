@@ -2,6 +2,7 @@ import logging
 import json
 import time
 
+from domain.process_sale.service.sale_service import SaleService
 from domain.sefaz.sefaz_service import SefazService
 from infrastructure.config.rabbit_mq_config import RabbitMQConfig
 from pika.exceptions import AMQPConnectionError
@@ -14,6 +15,7 @@ class SaleListener:
     def __init__(self):
         self.rabbit_config = RabbitMQConfig()
         self.sefaz_service = SefazService()
+        self.sale_service = SaleService()
 
     def processar_venda(self, channel, method, properties, body):
         try:
@@ -22,8 +24,8 @@ class SaleListener:
 
             mensagem_decodificada = json.loads(mensagem_json)
 
-            authorize_response = self.sefaz_service.autorizar_venda(mensagem_decodificada)
-            logging.info(f"AUTHORIZE_RESPONSE: {authorize_response}")
+            authorize_response = self.sefaz_service.authorize_sale(mensagem_decodificada)
+            self.sale_service.save(mensagem_decodificada, authorize_response)
 
         except json.JSONDecodeError as e:
             logging.error(f"Erro ao decodificar JSON: {e}")

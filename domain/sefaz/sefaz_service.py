@@ -15,13 +15,13 @@ class SefazService:
         self.tributo_client = TributoClient()
         self.sefaz_client = SefazClient()
 
-    def autorizar_venda(self, venda_request):
-        authorize_request = self._gerar_authorize_request(venda_request)
+    def authorize_sale(self, venda_request):
+        authorize_request = self._generate_sales_request(venda_request)
         authorize_request_dict = asdict(authorize_request)
 
         return self.sefaz_client.authorize(authorize_request_dict)
 
-    def _gerar_authorize_request(self, venda_request):
+    def _generate_sales_request(self, venda_request):
         customer = self._gerar_customer(venda_request['cliente'])
         products = self._gerar_produtos(venda_request)
         return AuthorizeRequest(
